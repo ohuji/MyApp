@@ -4,7 +4,7 @@ import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = () => {
-  const {isLoggedIn, setIsLoggedIn} = useContext(MainContext);
+  const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
 
   console.log('Profile', isLoggedIn);
 
@@ -20,6 +20,13 @@ const Profile = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>
+      <Text>
+        User: {user.username} (id: {user.user_id})
+      </Text>
+      <Text>Email: {user.email}</Text>
+      <Text>Full Name: {user.full_name}</Text>
+      <Text>User Since; {user.time_created}</Text>
+
       <Button title="Logout" onPress={logOut} />
     </SafeAreaView>
   );

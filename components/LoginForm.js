@@ -6,7 +6,7 @@ import {MainContext} from '../contexts/MainContext';
 import {useLogin} from '../hooks/ApiHooks';
 
 const loginForm = () => {
-  const {isLoggedIn, setIsLoggedIn} = useContext(MainContext);
+  const {isLoggedIn, setIsLoggedIn, setUser} = useContext(MainContext);
   const {postLogin} = useLogin();
 
   const {
@@ -24,6 +24,7 @@ const loginForm = () => {
 
       await AsyncStorage.setItem('userToken', userData.token);
 
+      setUser(userData.user);
       setIsLoggedIn(true);
     } catch (error) {
       console.error('login error', error);
