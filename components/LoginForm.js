@@ -32,7 +32,7 @@ const loginForm = () => {
 
   return (
     <View>
-      <Text>Login</Text>
+      <Text>Login Form</Text>
       <Controller
         control={control}
         rules={{
