@@ -1,15 +1,16 @@
 import React from 'react';
 import {StyleSheet, SafeAreaView, Text, Image} from 'react-native';
 import PropTypes from 'prop-types';
+import {mediaUrl} from '../utils/Variables';
 
 const Single = ({route}) => {
-  const {singleMedia, mediaUrl} = route.params;
+  const {filename, title} = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>{singleMedia.title}</Text>
+      <Text>{title}</Text>
       <Image
-        source={{uri: mediaUrl + singleMedia.thumbnails.w160}}
+        source={{uri: mediaUrl + filename}}
         style={{width: 200, height: 200}}
       />
     </SafeAreaView>

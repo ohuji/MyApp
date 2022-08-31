@@ -1,15 +1,14 @@
 import React from 'react';
 import {Image, Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
+import {mediaUrl} from '../utils/Variables';
 
 const ListItem = ({singleMedia, navigation}) => {
-  const mediaUrl = 'https://media.mw.metropolia.fi/wbma/uploads/';
-
   return (
     <TouchableOpacity
       style={styles.touchableOpacity}
       onPress={() => {
-        navigation.navigate('Single', {singleMedia, mediaUrl});
+        navigation.navigate('Single', singleMedia);
       }}
     >
       <View style={styles.view}>

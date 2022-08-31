@@ -1,22 +1,26 @@
-import React from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {useContext, useEffect} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useUser} from '../hooks/ApiHooks';
+import LoginForm from '../components/LoginForm';
 
 const Login = ({navigation}) => {
-  const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
+  const {getUserByToken} = useUser();
 
   const checkToken = async () => {
-    try {
-      const userToken = await AsyncStorage.getItem('userToken');
+    const userToken = await AsyncStorage.getItem('userToken');
 
-      if (userToken === 'abc') {
+    try {
+      if (userToken != null) {
+        const userData = await getUserByToken(userToken);
         setIsLoggedIn(true);
+        setUser(userData);
       }
     } catch (error) {
-      console.error('checktoken error', error);
+      console.error('login token error', error);
     }
   };
 
@@ -24,21 +28,9 @@ const Login = ({navigation}) => {
     checkToken();
   }, []);
 
-  const logIn = async () => {
-    try {
-      console.log('Button pressed', isLoggedIn);
-      setIsLoggedIn(true);
-
-      await AsyncStorage.setItem('userToken', 'abc');
-    } catch (error) {
-      console.error('login error', error);
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <Text>Login</Text>
-      <Button title="Sign in!" onPress={logIn} />
+      <LoginForm />
     </View>
   );
 };

@@ -1,29 +1,64 @@
 import {useEffect, useState} from 'react';
-
-const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
+import {doFetch} from '../utils/Http';
+import {apiUrl} from '../utils/Variables';
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
   const loadMedia = async () => {
     try {
-      const response = await fetch(apiUrl + 'media?limit=5');
-      const json = await response.json();
+      const json = await doFetch(apiUrl + 'media?limit=5');
       console.log(json);
-      const allMediaData = json.map(async (item) => {
-        const res = await fetch(apiUrl + 'media/' + item.file_id);
-        return await res.json();
+
+      const allMediaData = json.map(async (mediaItem) => {
+        return await doFetch(apiUrl + 'media/' + mediaItem.file_id);
       });
+
       setMediaArray(await Promise.all(allMediaData));
     } catch (error) {
-      console.log('fetch failer', error);
+      console.log('media fetch failed', error);
     }
   };
-
   useEffect(() => {
     loadMedia();
   }, []);
-
   return {mediaArray};
 };
 
-export {useMedia};
+const useLogin = () => {
+  const postLogin = async (userCredentials) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userCredentials),
+    };
+    try {
+      return await doFetch(apiUrl + 'login', options);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  return {postLogin};
+};
+
+const useUser = () => {
+  const getUserByToken = async (token) => {
+    try {
+      const options = {
+        method: 'GET',
+        headers: {'x-access-token': token},
+      };
+      const userData = await doFetch(apiUrl + 'users/user', options);
+
+      return userData;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  return {getUserByToken};
+};
+
+export {useLogin, useMedia, useUser};
