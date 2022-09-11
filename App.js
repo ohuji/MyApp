@@ -1,12 +1,12 @@
 import React from 'react';
-import {StatusBar} from 'expo-status-bar';
 import Navigator from './navigators/Navigator';
 import {MainProvider} from './contexts/MainContext';
 import {Keyboard, TouchableOpacity} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const App = () => {
   return (
-    <>
+    <SafeAreaProvider>
       <MainProvider>
         <TouchableOpacity
           onPress={() => Keyboard.dismiss()}
@@ -16,8 +16,7 @@ const App = () => {
           <Navigator></Navigator>
         </TouchableOpacity>
       </MainProvider>
-      <StatusBar style="auto" />
-    </>
+    </SafeAreaProvider>
   );
 };
 

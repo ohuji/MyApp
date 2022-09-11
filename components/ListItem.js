@@ -1,48 +1,32 @@
 import React from 'react';
-import {Image, Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {mediaUrl} from '../utils/Variables';
+import {ListItem as RNEListItem, Avatar} from '@rneui/themed';
 
 const ListItem = ({singleMedia, navigation}) => {
   return (
-    <TouchableOpacity
-      style={styles.touchableOpacity}
+    <RNEListItem
+      bottomDivider
       onPress={() => {
         navigation.navigate('Single', singleMedia);
       }}
     >
-      <View style={styles.view}>
-        <Image
-          style={styles.image}
-          source={{uri: mediaUrl + singleMedia.thumbnails.w160}}
-        />
-      </View>
-      <View style={styles.view}>
-        <Text style={styles.text}>{singleMedia.title}</Text>
-        <Text>{singleMedia.description}</Text>
-      </View>
-    </TouchableOpacity>
+      <Avatar
+        size="large"
+        source={{uri: mediaUrl + singleMedia.thumbnails.w160}}
+      />
+      <RNEListItem.Content>
+        <RNEListItem.Title numberOfLines={1} h4>
+          {singleMedia.title}
+        </RNEListItem.Title>
+        <RNEListItem.Subtitle numberOfLines={1}>
+          {singleMedia.description}
+        </RNEListItem.Subtitle>
+      </RNEListItem.Content>
+      <RNEListItem.Chevron />
+    </RNEListItem>
   );
 };
-
-const styles = StyleSheet.create({
-  touchableOpacity: {
-    margin: 10,
-    flexDirection: 'row',
-  },
-  view: {
-    flex: 1,
-    backgroundColor: '#d0d0d0',
-    padding: 5,
-  },
-  image: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-});
 
 ListItem.propTypes = {
   singleMedia: PropTypes.object,

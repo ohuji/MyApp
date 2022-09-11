@@ -1,31 +1,36 @@
+/* eslint-disable camelcase */
 import React from 'react';
-import {StyleSheet, SafeAreaView, Text, Image} from 'react-native';
 import PropTypes from 'prop-types';
 import {mediaUrl} from '../utils/Variables';
+import {ScrollView, ActivityIndicator} from 'react-native';
+import {Card, ListItem, Text, Avatar} from '@rneui/themed';
+import FullSizeImage from '../components/FullSizeImage';
 
 const Single = ({route}) => {
-  const {filename, title} = route.params;
+  const {filename, title, description, user_id} = route.params;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>{title}</Text>
-      <Image
-        source={{uri: mediaUrl + filename}}
-        style={{width: 200, height: 200}}
-      />
-    </SafeAreaView>
+    <ScrollView>
+      <Card>
+        <Card.Title>{title}</Card.Title>
+        <Card.Divider />
+        <FullSizeImage
+          source={{uri: mediaUrl + filename}}
+          PlaceholderContent={<ActivityIndicator />}
+          style={{marginBottom: 12}}
+        />
+        <Card.Divider />
+        <ListItem>
+          <Text>{description}</Text>
+        </ListItem>
+        <ListItem>
+          <Avatar source={{uri: 'https://placekitten.com/160'}} />
+          <Text>{user_id}</Text>
+        </ListItem>
+      </Card>
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 40,
-  },
-});
 
 Single.propTypes = {
   route: PropTypes.object,
