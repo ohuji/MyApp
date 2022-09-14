@@ -14,9 +14,9 @@ const Login = ({navigation}) => {
   const [showRegForm, setShowRegForm] = useState(false);
 
   const checkToken = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
-
     try {
+      const userToken = await AsyncStorage.getItem('userToken');
+
       if (userToken != null) {
         const userData = await getUserByToken(userToken);
         setIsLoggedIn(true);
