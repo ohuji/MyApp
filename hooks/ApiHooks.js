@@ -1,13 +1,22 @@
+import {useContext} from 'react';
 import {useEffect, useState} from 'react';
+import {MainContext} from '../contexts/MainContext';
 import {doFetch} from '../utils/Http';
-import {apiUrl} from '../utils/Variables';
+import {apiUrl, applicationTag} from '../utils/Variables';
 
-const useMedia = (update) => {
+const useMedia = (update, myFilesOnly = false) => {
   const [mediaArray, setMediaArray] = useState([]);
+  const {user} = useContext(MainContext);
+
   const loadMedia = async () => {
     try {
-      const json = await doFetch(apiUrl + 'media?limit=10');
-      console.log(json);
+      let json = await useTag().getFilesByTag(applicationTag);
+
+      if (myFilesOnly) {
+        json = json.filter((file) => file.user_id === user.user_id);
+      }
+
+      json.reverse();
 
       const allMediaData = json.map(async (mediaItem) => {
         return await doFetch(apiUrl + 'media/' + mediaItem.file_id);
@@ -35,7 +44,32 @@ const useMedia = (update) => {
     }
   };
 
-  return {mediaArray, postMedia};
+  const putMedia = async (token, data, fileId) => {
+    const options = {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(apiUrl + 'media/' + fileId, options);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  const deleteMedia = async (token, fileId) => {
+    const options = {
+      method: 'DELETE',
+      headers: {'x-access-token': token},
+    };
+    try {
+      return await doFetch(apiUrl + 'media/' + fileId, options);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  return {mediaArray, postMedia, putMedia, deleteMedia};
 };
 
 const useLogin = () => {
@@ -97,7 +131,9 @@ const useUser = () => {
     }
   };
 
-  return {checkUsername, getUserByToken, postUser};
+  const getUserById = () => {};
+
+  return {checkUsername, getUserByToken, postUser, getUserById};
 };
 
 const useTag = () => {
